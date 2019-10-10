@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Msa.Comm.Lab.Services.Order.ApiClients;
+using Polly;
 using Refit;
 
 namespace Msa.Comm.Lab.Services.Order
@@ -28,8 +31,17 @@ namespace Msa.Comm.Lab.Services.Order
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            bool RetryableStatusCodesPredicate(HttpStatusCode statusCode) =>
+                statusCode == HttpStatusCode.BadGateway
+                    || statusCode == HttpStatusCode.ServiceUnavailable
+                    || statusCode == HttpStatusCode.GatewayTimeout;
+
             services.AddRefitClient<ICatalogApiClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://msa.comm.lab.services.catalog"));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://msa.comm.lab.services.catalog"))
+                .AddPolicyHandler(Policy
+                    .Handle<HttpRequestException>()
+                    .OrResult<HttpResponseMessage>(msg => RetryableStatusCodesPredicate(msg.StatusCode))
+                    .RetryAsync(5));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
