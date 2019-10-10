@@ -50,7 +50,7 @@ namespace Msa.Comm.Lab.Services.Catalog
 
             app.UseProblemDetails();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
