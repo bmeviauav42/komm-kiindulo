@@ -41,7 +41,9 @@ namespace Msa.Comm.Lab.Services.Order
                 .AddPolicyHandler(Policy
                     .Handle<HttpRequestException>()
                     .OrResult<HttpResponseMessage>(msg => RetryableStatusCodesPredicate(msg.StatusCode))
-                    .RetryAsync(5));
+                    //.RetryAsync(5)
+                    .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                ));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
