@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Msa.Comm.Lab.Services.Catalog/Dockerfile
+    depends_on:
+      - rabbitmq
 
   msa.comm.lab.services.order:
     image: ${DOCKER_REGISTRY-}msacommlabservicesorder
@@ -14,4 +16,13 @@ services:
       dockerfile: Msa.Comm.Lab.Services.Order/Dockerfile
     depends_on:
       - msa.comm.lab.services.catalog
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    container_name: rabbitmq
+    hostname: rabbitmq
 

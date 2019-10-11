@@ -12,7 +12,7 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        List<Product> _products = new List<Product>
+        public static List<Product> Products = new List<Product>
         {
             new Product { ProductId = 1, Name = "Sör", Stock = 10, UnitPrice = 250 },
             new Product { ProductId = 2, Name = "Bor", Stock = 5, UnitPrice = 890 },
@@ -29,14 +29,14 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
             }
             else
             {
-                return _products;
+                return Products;
             }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Product> Get(int id)
         {
-            return _products.SingleOrDefault(p => p.ProductId == id)
+            return Products.SingleOrDefault(p => p.ProductId == id)
                 ?? throw new EntityNotFoundException($"A megadott azonosítóval ({id}) nem található termék");
         }
     }

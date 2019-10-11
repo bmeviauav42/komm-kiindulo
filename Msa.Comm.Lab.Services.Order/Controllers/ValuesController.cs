@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Msa.Comm.Lab.Services.Order.ApiClients;
+using Msa.Comm.Lab.Services.Order.IntegrationEvents;
 
 namespace Msa.Comm.Lab.Services.Order.Controllers
 {
@@ -12,10 +14,12 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ICatalogApiClient _catalogApiClient;
+        private readonly IBusControl _bus;
 
-        public ValuesController(ICatalogApiClient catalogApiClient)
+        public ValuesController(ICatalogApiClient catalogApiClient, IBusControl bus)
         {
             _catalogApiClient = catalogApiClient;
+            _bus = bus;
         }
 
         [HttpGet]
@@ -28,6 +32,14 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
         public ActionResult<string> Get(int id)
         {
             return "test";
+        }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult> CreateOrder()
+        {
+            await _bus.Publish(new OrderCreatedEvent { ProductId = 1, Quantity = 1 });
+
+            return Ok(new { Message = "Megrendelés sikeres!" });
         }
     }
 }
