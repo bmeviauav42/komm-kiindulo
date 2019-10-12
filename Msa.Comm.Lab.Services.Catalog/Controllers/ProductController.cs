@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Msa.Comm.Lab.Services.Catalog.Exceptions;
 using Msa.Comm.Lab.Services.Catalog.Models;
 
 namespace Msa.Comm.Lab.Services.Catalog.Controllers
