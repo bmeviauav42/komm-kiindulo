@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Msa.Comm.Lab.Services.Catalog.Exceptions;
 using Msa.Comm.Lab.Services.Catalog.Models;
@@ -25,7 +26,7 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
             var rand = new Random();
             if (rand.Next() % 5 == 0)
             {
-                throw new TestTransientException("nem várt hiba történt");
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
             else
             {
@@ -36,8 +37,15 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
         [HttpGet("{id}")]
         public ActionResult<Product> Get(int id)
         {
-            return _products.SingleOrDefault(p => p.ProductId == id)
-                ?? throw new EntityNotFoundException($"A megadott azonosítóval ({id}) nem található termék");
+            var product = _products.SingleOrDefault(p => p.ProductId == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return product;
+            }
         }
     }
 }
