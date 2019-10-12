@@ -34,10 +34,15 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
             return $"test: {id}";
         }
 
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         public async Task<ActionResult> CreateOrder()
         {
-            await _bus.Publish(new OrderCreatedEvent { ProductId = 1, Quantity = 1 });
+            await _bus.Publish(new OrderCreatedEvent 
+            { 
+                ProductId = 1,
+                Quantity = 1,
+                OrderPlaced = DateTimeOffset.UtcNow
+            });
 
             return Ok(new { Message = "Megrendelés sikeres!" });
         }

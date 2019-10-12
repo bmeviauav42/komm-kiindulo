@@ -10,5 +10,6 @@ namespace Msa.Comm.Lab.Services.Catalog.IntegrationEvents
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
+        public DateTimeOffset OrderPlaced { get; set; }
     }
 }

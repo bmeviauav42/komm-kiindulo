@@ -35,7 +35,6 @@ namespace Msa.Comm.Lab.Services.Catalog
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<OrderCreatedEventHandler>();
-
                 x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     var host = cfg.Host(new Uri($"rabbitmq://rabbitmq:"), hostConfig =>
@@ -43,13 +42,9 @@ namespace Msa.Comm.Lab.Services.Catalog
                         hostConfig.Username("guest");
                         hostConfig.Password("guest");
                     });
-
                     cfg.UseExtensionsLogging(provider.GetRequiredService<ILoggerFactory>());
-
                     cfg.ReceiveEndpoint(host, "integration", ep =>
                     {
-                        ep.PrefetchCount = 16;
-                        ep.UseMessageRetry(mr => mr.Interval(2, 100));
                         ep.ConfigureConsumer<OrderCreatedEventHandler>(provider);
                     });
                 }));

@@ -9,6 +9,7 @@ namespace Msa.Comm.Lab.Services.Order.IntegrationEvents
     public class OrderCreatedEvent : IOrderCreatedEvent
     {
         public int ProductId { get; set; }
+        public DateTimeOffset OrderPlaced { get; set; }
         public int Quantity { get; set; }
     }
 }

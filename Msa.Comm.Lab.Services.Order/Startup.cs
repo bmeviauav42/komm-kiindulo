@@ -51,16 +51,16 @@ namespace Msa.Comm.Lab.Services.Order
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider =>
-                Bus.Factory.CreateUsingRabbitMq(cfg => 
-                {
-                    cfg.Host(new Uri($"rabbitmq://rabbitmq:/"),
-                    hostConfig =>
+                    Bus.Factory.CreateUsingRabbitMq(cfg =>
                     {
-                        hostConfig.Username("guest");
-                        hostConfig.Password("guest");
-                    });
-                    cfg.UseExtensionsLogging(provider.GetRequiredService<ILoggerFactory>());
-                }));
+                        cfg.Host(new Uri($"rabbitmq://rabbitmq:/"),
+                            hostConfig =>
+                            {
+                                hostConfig.Username("guest");
+                                hostConfig.Password("guest");
+                            });
+                        cfg.UseExtensionsLogging(provider.GetRequiredService<ILoggerFactory>());
+                    }));
 
                 EndpointConvention.Map<IOrderCreatedEvent>(new Uri("rabbitmq://rabbitmq:/integration"));
             });
