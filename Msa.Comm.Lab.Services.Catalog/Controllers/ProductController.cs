@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Msa.Comm.Lab.Services.Catalog.Exceptions;
 using Msa.Comm.Lab.Services.Catalog.Models;
@@ -12,7 +13,7 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        public static List<Product> Products = new List<Product>
+        internal static List<Product> Products = new List<Product>
         {
             new Product { ProductId = 1, Name = "Sör", Stock = 10, UnitPrice = 250 },
             new Product { ProductId = 2, Name = "Bor", Stock = 5, UnitPrice = 890 },
@@ -25,7 +26,7 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
             var rand = new Random();
             if (rand.Next() % 5 == 0)
             {
-                throw new TestTransientException("nem várt hiba történt");
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
             else
             {
@@ -36,8 +37,15 @@ namespace Msa.Comm.Lab.Services.Catalog.Controllers
         [HttpGet("{id}")]
         public ActionResult<Product> Get(int id)
         {
-            return Products.SingleOrDefault(p => p.ProductId == id)
-                ?? throw new EntityNotFoundException($"A megadott azonosítóval ({id}) nem található termék");
+            var product = Products.SingleOrDefault(p => p.ProductId == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return product;
+            }
         }
     }
 }

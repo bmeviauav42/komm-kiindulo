@@ -34,12 +34,6 @@ namespace Msa.Comm.Lab.Services.Catalog
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddProblemDetails(o =>
-            {
-                o.Map<EntityNotFoundException>(ex => new StatusCodeProblemDetails(StatusCodes.Status404NotFound));
-                o.Map<TestTransientException>(ex => new ExceptionProblemDetails(ex, StatusCodes.Status503ServiceUnavailable));
-            });
-
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<OrderCreatedEventHandler>();
