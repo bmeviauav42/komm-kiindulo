@@ -9,11 +9,11 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class TestController : ControllerBase
     {
         private readonly ICatalogApiClient _catalogApiClient;
 
-        public ValuesController(ICatalogApiClient catalogApiClient)
+        public TestController(ICatalogApiClient catalogApiClient)
         {
             _catalogApiClient = catalogApiClient;
         }
@@ -27,7 +27,7 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "test";
+            return $"test: {id}";
         }
     }
 }
