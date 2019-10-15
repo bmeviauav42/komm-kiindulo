@@ -3,10 +3,10 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>c67363d6-da31-469b-8a8d-ac6f6d6af5da</ProjectGuid>
+    <ProjectGuid>93bea77d-e08b-43dd-bcf0-0b6080c7136a</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/values</DockerServiceUrl>
-    <DockerServiceName>msa.comm.lab.services.order</DockerServiceName>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/product</DockerServiceUrl>
+    <DockerServiceName>msa.comm.lab.services.catalog</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
