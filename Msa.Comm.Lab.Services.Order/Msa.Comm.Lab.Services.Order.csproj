@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.23.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.23.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="5.5.5" />
     <PackageReference Include="MassTransit.Extensions.Logging" Version="5.5.5" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="5.5.5" />
@@ -18,6 +24,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Msa.Comm.Lab.Events\Msa.Comm.Lab.Events.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\Msa.Comm.Lab.Services.Catalog\Protos\catalog.proto" GrpcServices="Client">
+      <Link>Protos\catalog.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

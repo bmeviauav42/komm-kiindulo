@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Msa.Comm.Lab.Services.Catalog.IntegrationEventHandlers;
 using Msa.Comm.Lab.Services.Catalog.IntegrationEvents;
+using Msa.Comm.Lab.Services.Catalog.Grpc;
 
 namespace Msa.Comm.Lab.Services.Catalog
 {
@@ -31,6 +32,7 @@ namespace Msa.Comm.Lab.Services.Catalog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddGrpc();
 
             services.AddMassTransit(x =>
             {
@@ -68,6 +70,7 @@ namespace Msa.Comm.Lab.Services.Catalog
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<Services.CatalogService>();
                 endpoints.MapControllers();
             });
 

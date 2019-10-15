@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Msa.Comm.Lab.Services.Catalog.Grpc;
 using Msa.Comm.Lab.Services.Order.ApiClients;
 using Msa.Comm.Lab.Services.Order.IntegrationEvents;
 
@@ -15,17 +16,19 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
     {
         private readonly ICatalogApiClient _catalogApiClient;
         private readonly IBusControl _bus;
+        private readonly CatalogService.CatalogServiceClient _catalogServiceClient;
 
-        public TestController(ICatalogApiClient catalogApiClient, IBusControl bus)
+        public TestController(ICatalogApiClient catalogApiClient, IBusControl bus, CatalogService.CatalogServiceClient catalogServiceClient)
         {
             _catalogApiClient = catalogApiClient;
             _bus = bus;
+            _catalogServiceClient = catalogServiceClient;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public async Task<ActionResult<IEnumerable<Catalog.Grpc.Product>>> Get()
         {
-            return await _catalogApiClient.GetProductsAsync();
+            return (await _catalogServiceClient.GetProductsAsync(new Empty())).Products;
         }
 
         [HttpGet("{id}")]

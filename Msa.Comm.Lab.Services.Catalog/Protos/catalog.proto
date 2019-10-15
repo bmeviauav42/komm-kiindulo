@@ -1,0 +1,28 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Msa.Comm.Lab.Services.Catalog.Grpc";
+
+package Catalog;
+
+service CatalogService {
+  rpc GetProducts (Empty) returns (ProductsResponse);
+  rpc GetProduct (GetProductRequest) returns (Product);
+}
+
+message Empty {
+}
+
+message ProductsResponse {
+	repeated Product Products = 1;
+}
+
+message Product {
+	int32 ProductId = 1;
+	string Name = 2;
+	double UnitPrice = 3;
+	int32 Stock = 4;
+}
+
+message GetProductRequest {
+	int32 ProductId = 1;
+} 

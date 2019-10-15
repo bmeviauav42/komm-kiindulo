@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Msa.Comm.Lab.Events;
+using Msa.Comm.Lab.Services.Catalog.Grpc;
 using Msa.Comm.Lab.Services.Order.ApiClients;
 using Polly;
 using Refit;
@@ -64,6 +65,14 @@ namespace Msa.Comm.Lab.Services.Order
                     }));
 
                 EndpointConvention.Map<IOrderCreatedEvent>(new Uri("rabbitmq://rabbitmq:/integration"));
+            });
+
+            services.AddGrpcClient<CatalogService.CatalogServiceClient>(o =>
+            {
+                o.Address = new Uri("https://msa.comm.lab.services.catalog");
+            }).ConfigurePrimaryHttpMessageHandler(p => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
         }
 
