@@ -14,13 +14,13 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly ICatalogApiClient _catalogApiClient;
+        //private readonly ICatalogApiClient _catalogApiClient;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly CatalogService.CatalogServiceClient _catalogServiceClient;
 
         public TestController(ICatalogApiClient catalogApiClient, IPublishEndpoint publishEndpoint, CatalogService.CatalogServiceClient catalogServiceClient)
         {
-            _catalogApiClient = catalogApiClient;
+            //_catalogApiClient = catalogApiClient;
             _publishEndpoint = publishEndpoint;
             _catalogServiceClient = catalogServiceClient;
         }
