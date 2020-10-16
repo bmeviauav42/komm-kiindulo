@@ -15,13 +15,13 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
     public class TestController : ControllerBase
     {
         private readonly ICatalogApiClient _catalogApiClient;
-        private readonly IBusControl _bus;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly CatalogService.CatalogServiceClient _catalogServiceClient;
 
-        public TestController(ICatalogApiClient catalogApiClient, IBusControl bus, CatalogService.CatalogServiceClient catalogServiceClient)
+        public TestController(ICatalogApiClient catalogApiClient, IPublishEndpoint publishEndpoint, CatalogService.CatalogServiceClient catalogServiceClient)
         {
             _catalogApiClient = catalogApiClient;
-            _bus = bus;
+            _publishEndpoint = publishEndpoint;
             _catalogServiceClient = catalogServiceClient;
         }
 
@@ -40,7 +40,7 @@ namespace Msa.Comm.Lab.Services.Order.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult> CreateOrder()
         {
-            await _bus.Publish(new OrderCreatedEvent 
+            await _publishEndpoint.Publish(new OrderCreatedEvent
             { 
                 ProductId = 1,
                 Quantity = 1,

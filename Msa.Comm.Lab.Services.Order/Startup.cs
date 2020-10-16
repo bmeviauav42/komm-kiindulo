@@ -52,20 +52,20 @@ namespace Msa.Comm.Lab.Services.Order
 
             services.AddMassTransit(x =>
             {
-                x.AddBus(provider =>
-                    Bus.Factory.CreateUsingRabbitMq(cfg =>
-                    {
-                        cfg.Host(new Uri($"rabbitmq://rabbitmq:/"),
-                            hostConfig =>
-                            {
-                                hostConfig.Username("guest");
-                                hostConfig.Password("guest");
-                            });
-                        cfg.UseExtensionsLogging(provider.GetRequiredService<ILoggerFactory>());
-                    }));
+                x.UsingRabbitMq((ctx, config) =>
+                {
+                    config.Host(new Uri($"rabbitmq://rabbitmq:/"),
+                        hostConfig =>
+                        {
+                            hostConfig.Username("guest");
+                            hostConfig.Password("guest");
+                        });
+                });
 
                 EndpointConvention.Map<IOrderCreatedEvent>(new Uri("rabbitmq://rabbitmq:/integration"));
             });
+
+            services.AddMassTransitHostedService();
 
             services.AddGrpcClient<CatalogService.CatalogServiceClient>(o =>
             {

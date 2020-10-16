@@ -37,20 +37,21 @@ namespace Msa.Comm.Lab.Services.Catalog
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<OrderCreatedEventHandler>();
-                x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+                x.UsingRabbitMq((ctx, cfg) =>
                 {
-                    var host = cfg.Host(new Uri($"rabbitmq://rabbitmq:"), hostConfig =>
+                    cfg.Host(new Uri($"rabbitmq://rabbitmq:/"), hostConfig =>
                     {
                         hostConfig.Username("guest");
                         hostConfig.Password("guest");
                     });
-                    cfg.UseExtensionsLogging(provider.GetRequiredService<ILoggerFactory>());
-                    cfg.ReceiveEndpoint(host, "integration", ep =>
+                    cfg.ReceiveEndpoint("integration", e =>
                     {
-                        ep.ConfigureConsumer<OrderCreatedEventHandler>(provider);
+                        e.ConfigureConsumer<OrderCreatedEventHandler>(ctx);
                     });
-                }));
+                });
             });
+
+            services.AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
@@ -73,10 +74,6 @@ namespace Msa.Comm.Lab.Services.Catalog
                 endpoints.MapGrpcService<Services.CatalogService>();
                 endpoints.MapControllers();
             });
-
-            var bus = app.ApplicationServices.GetService<IBusControl>();
-            var busHandle = TaskUtil.Await(() => bus.StartAsync());
-            applicationLifetime.ApplicationStopping.Register(() => busHandle.Stop());
         }
     }
 }
